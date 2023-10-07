@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Melihovv\Base64ImageDecoder\Base64ImageDecoder;
 use Str;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -62,11 +64,48 @@ class AuthController extends Controller
             ]);
 
             DB::commit();
+            $token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password]);
+            $userResponse = getUser($request->email);
+            $userResponse->token = $token;
+            $userResponse->experies_in = auth()->factory()->getTTL() * 60;
+            $userResponse->token_type = 'bearer';
+            return response()->json($userResponse, 200);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json(['message' => $e->getMessage()], 500);
         }
 
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        $validator = Validator::make($credentials, [
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json(['errors' => $validator->messages()], 400);
+        }
+
+        try {
+            $token = JWTAuth::attempt($credentials);
+
+            if(!$token) {
+                return response()->json(['message' => 'Invalid credentials'], 401);
+            }
+
+            $userResponse = getUser($request->email);
+            $userResponse->token = $token;
+            $userResponse->experies_in = auth()->factory()->getTTL() * 60;
+            $userResponse->token_type = 'bearer';
+
+            return response()->json($userResponse, 200);
+        } catch (JWTException $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     private function generateCardNumber($length)
