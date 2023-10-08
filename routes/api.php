@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DataPlanController;
+use App\Http\Controllers\Api\DataPlanHistoryController;
 use App\Http\Controllers\Api\TopUpController;
 use App\Http\Controllers\Api\TransferController;
 use App\Http\Controllers\Api\WebhookController;
@@ -27,6 +29,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('webhooks', [WebhookController::class, 'update']);
 
 Route::group(['middleware' => 'jwt.verify'], function () {
-    Route::post('top_ups', [TopUpController::class, 'store']);
+    Route::post('top-ups', [TopUpController::class, 'store']);
     Route::post('transfers', [TransferController::class, 'store']);
+    Route::post('data-plan-histories', [DataPlanHistoryController::class, 'store']);
 });
