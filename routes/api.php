@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DataPlanController;
 use App\Http\Controllers\Api\DataPlanHistoryController;
 use App\Http\Controllers\Api\OperatorCardController;
+use App\Http\Controllers\Api\PaymentMethodController;
 use App\Http\Controllers\Api\TopUpController;
 use App\Http\Controllers\Api\TransferController;
+use App\Http\Controllers\Api\TransferHistoryController;
 use App\Http\Controllers\Api\WebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +35,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('transfers', [TransferController::class, 'store']);
     Route::post('data-plan-histories', [DataPlanHistoryController::class, 'store']);
     Route::get('operator-cards', [OperatorCardController::class, 'index']);
+    Route::get('payment-methods', [PaymentMethodController::class, 'index']);
+    Route::get('transfer-histories', [TransferHistoryController::class, 'index']);
 });
