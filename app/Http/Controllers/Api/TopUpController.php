@@ -102,7 +102,6 @@ class TopUpController extends Controller
             $params['payment_method_code']
         ];
 
-        //dd('a',$transactionDetails, 'b',$customerDetails, 'c',$enablePayment);
         return [
             'transaction_details' => $transactionDetails,
             'customer_details' => $customerDetails,
