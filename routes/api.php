@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Middleware\JwtMiddleware;
+use App\Http\Controllers\Api\TopUpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('jwt.verify')->get('/test', function (Request $request) {
-    return 'success';
-});
+// Route::middleware('jwt.verify')->get('/test', function (Request $request) {
+//     return 'success';
+// });
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+
+Route::group(['middleware' => 'jwt.verify'], function () {
+    Route::post('top_ups', [TopUpController::class, 'store']);
+});

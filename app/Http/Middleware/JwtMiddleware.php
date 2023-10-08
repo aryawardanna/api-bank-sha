@@ -25,7 +25,7 @@ class JwtMiddleware
             }else if($e instanceof Tymon\JWTAuth\Exceptions\TokenExpiredException){
                 return response()->json(['message' => 'Token Expired'], 401);
             }else{
-                return response()->json(['message' => 'Token Not Provided'], 401);
+                return response()->json(['message' => $e->getMessage()], 401);
             }
         }
         return $next($request);
