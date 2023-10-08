@@ -16,4 +16,9 @@ class OperatorCard extends Model
         'thumbnail',
         'status',
     ];
+
+    public function dataPlans()
+    {
+        return $this->hasMany(DataPlan::class);
+    }
 }
