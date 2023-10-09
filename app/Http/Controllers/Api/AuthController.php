@@ -7,10 +7,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Melihovv\Base64ImageDecoder\Base64ImageDecoder;
-use Str;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -39,10 +36,10 @@ class AuthController extends Controller
             $ktp = null;
 
             if($request->profile_picture){
-                $profilePicture = $this->uploadBase64Image($request->profile_picture);
+                $profilePicture = uploadBase64Image($request->profile_picture);
             }
             if($request->ktp){
-                $ktp = $this->uploadBase64Image($request->ktp);
+                $ktp = uploadBase64Image($request->ktp);
             }
 
             $user = User::create([
@@ -123,15 +120,5 @@ class AuthController extends Controller
         return $result;
     }
 
-    private function uploadBase64Image($base64)
-    {
-        $decoder = new Base64ImageDecoder($base64, $allowedFormats = ['jpeg', 'png', 'jpg']);
 
-        $decodedImage = $decoder->getDecodedContent();
-        $format = $decoder->getFormat();
-        $image = Str::random(10) . '.' . $format;
-        Storage::disk('public')->put($image, $decodedImage);
-
-        return $image;
-    }
 }
