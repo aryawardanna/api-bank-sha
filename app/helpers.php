@@ -4,7 +4,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Support\Facades\Storage;
 use Melihovv\Base64ImageDecoder\Base64ImageDecoder;
-use Str;
+use Illuminate\Support\Str;
 
 function getUser($param) {
     $user = User::where('id', $param)->orWhere('email', $param)->orWhere('username', $param)->first();

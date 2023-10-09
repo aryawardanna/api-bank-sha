@@ -19,14 +19,13 @@ class JwtMiddleware
     {
         try {
             JWTAuth::parseToken()->authenticate();
-        } catch (Exception $e) {
-            if($e instanceof Tymon\JWTAuth\Exceptions\TokenInvalidException){
-                return response()->json(['message' => 'Token Invalid'], 401);
-            }else if($e instanceof Tymon\JWTAuth\Exceptions\TokenExpiredException){
-                return response()->json(['message' => 'Token Expired'], 401);
-            }else{
-                return response()->json(['message' => $e->getMessage()], 401);
+        } catch (\Exception $e) {
+            if ($e instanceof TokenInvalidException){
+                return response()->json(['status' => 'Token is Invalid']);
+            } else if ($e instanceof TokenExpiredException){
+                return response()->json(['status' => 'Token is Expired']);
             }
+            return response()->json(['status' => 'Authorization Token not found']);
         }
         return $next($request);
     }
